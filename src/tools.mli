@@ -1,5 +1,11 @@
 open Graph
 
+(* Copy nodes from a graph without its edges. *)
 val clone_nodes: 'a graph -> 'b graph
+
+(* Map the labels of a graph's edges. *)
 val gmap: 'a graph -> ('a -> 'b) -> 'b graph
+
+(* Adds n to the value of the arc between id1 and id2. If the arc does not exist, it is created.
+   Example: add_arc g id1 id2 n *)
 val add_arc: int graph -> id -> id -> int -> int graph

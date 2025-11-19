@@ -112,3 +112,20 @@ let from_file path =
   close_in infile ;
   final_graph
   
+let export path graph = 
+  (* Open outfile. *)  
+  let outfile = open_out path in
+  (* Write opening graph definition. *)
+  fprintf outfile "digraph finite_state_machine {\n
+  \tfontname=\"Helvetica,Arial,sans-serif\"\n
+  \tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n
+  \tdge [fontname=\"Helvetica,Arial,sans-serif\"]\n
+	\trankdir=LR;\n
+	\tnode [shape = circle];\n" ;
+  (* Write all arcs. *)
+  e_iter graph (fun arc -> fprintf outfile "%n -> %n [label = \"%n\"];\n" arc.src arc.tgt arc.lbl) ;
+  (* Write closing graph definition. *)
+  fprintf outfile "}" ;
+  (* Close outfile. *)  
+  close_out outfile ;
+  ()

@@ -123,7 +123,7 @@ let export path graph =
 	\trankdir=LR;\n
 	\tnode [shape = circle];\n" ;
   (* Write all arcs. *)
-  e_iter graph (fun arc -> fprintf outfile "%n -> %n [label = \"%n\"];\n" arc.src arc.tgt arc.lbl) ;
+  e_iter graph (fun arc -> fprintf outfile "%n -> %n [label = \"%s\"];\n" arc.src arc.tgt arc.lbl) ;
   (* Write closing graph definition. *)
   fprintf outfile "}" ;
   (* Close outfile. *)  

@@ -1,5 +1,5 @@
 (executables
- (names ftest toolstest exporttest)
+ (names ftest tools_test export_test ford_fulkerson_test)
  ;; (libraries )
  ;; Disable some warnings
  ;; (flags (:standard -w -6))

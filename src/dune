@@ -1,5 +1,5 @@
 (executables
- (names ftest toolstest)
+ (names ftest toolstest exporttest)
  ;; (libraries )
  ;; Disable some warnings
  ;; (flags (:standard -w -6))

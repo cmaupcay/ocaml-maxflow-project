@@ -116,14 +116,14 @@ let export path graph =
   (* Open outfile. *)  
   let outfile = open_out path in
   (* Write opening graph definition. *)
-  fprintf outfile "digraph finite_state_machine {\n
-  \tfontname=\"Helvetica,Arial,sans-serif\"\n
-  \tnode [fontname=\"Helvetica,Arial,sans-serif\"]\n
-  \tdge [fontname=\"Helvetica,Arial,sans-serif\"]\n
-	\trankdir=LR;\n
-	\tnode [shape = circle];\n" ;
+  fprintf outfile "digraph finite_state_machine {
+  \tfontname=\"Helvetica,Arial,sans-serif\"
+  \tnode [fontname=\"Helvetica,Arial,sans-serif\"]
+  \tedge [fontname=\"Helvetica,Arial,sans-serif\"]
+	rankdir=LR;
+	node [shape = circle];\n" ;
   (* Write all arcs. *)
-  e_iter graph (fun arc -> fprintf outfile "%n -> %n [label = \"%s\"];\n" arc.src arc.tgt arc.lbl) ;
+  e_iter graph (fun arc -> fprintf outfile "\t%d -> %d [label = \"%s\"];\n" arc.src arc.tgt arc.lbl) ;
   (* Write closing graph definition. *)
   fprintf outfile "}" ;
   (* Close outfile. *)  

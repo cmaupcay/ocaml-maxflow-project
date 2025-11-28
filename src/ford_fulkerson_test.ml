@@ -19,6 +19,7 @@ let test_find_path filename =
 let () = 
   assert (find_path empty_graph 0 1 = []);
   let graph01 = new_node (new_node (new_node empty_graph 0) 1) 2 in
+  assert (find_path graph01 0 0 = []);
   assert (find_path (new_arc graph01 {src=0;tgt=1;lbl=0}) 0 1 = [{src=0;tgt=1;lbl=0}]);
   assert (find_path (new_arc graph01 {src=0;tgt=2;lbl=0}) 0 1 = []);
 

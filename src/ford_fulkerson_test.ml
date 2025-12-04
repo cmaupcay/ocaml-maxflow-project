@@ -16,6 +16,19 @@ let test_find_path filename =
   Printf.printf ("Exported shortest path graph to SVG (%d).\n") ret;
   ()
 
+let test_max_flow filename = 
+  (* Read graph file. *)
+  let graph = from_file ("graphs/" ^ filename ^ ".txt") in 
+  (* Find shortest path and make new graph*)
+  let graph_flow = max_flow (gmap graph int_of_string) 0 (n_fold graph (fun x nid -> if x>nid then x else nid) 0) in
+  (* Export graph to Graphvision format. *)
+  export ("./graphs/" ^ filename ^ "_flow.gv.txt") (gmap graph_flow string_of_int) ;
+  print_endline ("Exported " ^ filename ^ ".txt to Graphviz format after finding max flow graph.") ;
+  (* Transform graph to SVG. *)
+  let ret = Sys.command ("dot -Tsvg ./graphs/" ^ filename ^ "_flow.gv.txt > ./graphs/" ^ filename ^ "_flow.svg") in
+  Printf.printf ("Exported flow graph to SVG (%d).\n") ret;
+  ()
+
 let () = 
   assert (find_path empty_graph 0 1 = []);
   let graph01 = new_node (new_node (new_node empty_graph 0) 1) 2 in
@@ -33,3 +46,19 @@ let () =
   test_find_path "graph8" ;
   test_find_path "graph9" ;
   test_find_path "graph10" ;
+
+  assert (max_flow empty_graph 0 1 = empty_graph);
+  let graph01 = new_node (new_node (new_node empty_graph 0) 1) 2 in
+  assert (max_flow graph01 0 0 = clone_nodes graph01);
+
+  test_max_flow "graph1" ;
+  test_max_flow "graph2" ;
+  test_max_flow "graph3" ;
+  test_max_flow "graph4" ;
+  test_max_flow "graph5" ;
+  test_max_flow "graph6" ;
+  test_max_flow "graph7" ;
+  test_max_flow "graph8" ;
+  test_max_flow "graph9" ;
+  test_max_flow "graph10" ;
+  test_max_flow "graph_cycle" ;

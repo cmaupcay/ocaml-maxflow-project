@@ -6,7 +6,20 @@ let gmap gr f = e_fold gr
   (fun grt ar -> new_arc grt {src = ar.src ; tgt = ar.tgt ; lbl = f (ar.lbl)}) 
   (clone_nodes gr)
 
-let add_arc gr id1 id2 n = let arc12 = find_arc gr id1 id2 in 
-  match arc12 with
+let add_arc gr id1 id2 n =
+  match find_arc gr id1 id2 with
   |None -> new_arc gr {src=id1 ; tgt=id2 ; lbl = n}
+  |Some ar -> new_arc gr {src=id1 ; tgt=id2 ; lbl = n+ar.lbl}
+
+let remove_arc gr id1 id2 = e_fold gr (
+  fun g ar -> match ar with
+    |{src=s;tgt=t;_} when (s=id1 && t=id2) -> g
+    |a -> new_arc g a
+  ) (clone_nodes gr)
+
+let add_or_remove_arc gr id1 id2 n =
+  match find_arc gr id1 id2 with
+  |None when n=0 -> gr
+  |None -> new_arc gr {src=id1 ; tgt=id2 ; lbl = n}
+  |Some ar when (n+ar.lbl = 0) -> remove_arc gr id1 id2
   |Some ar -> new_arc gr {src=id1 ; tgt=id2 ; lbl = n+ar.lbl}

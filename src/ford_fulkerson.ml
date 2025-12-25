@@ -34,6 +34,26 @@ let find_path gr src tgt =
     |true-> List.rev (loop gr src tgt [])
 
 
+let bellman_ford gr src = 
+
+  let rec loop gr src acu = function
+    |[]->acu
+
+    |x::r -> let (acu_new,queue) = List.fold_left (
+          fun (nodes, queue_temp) ar -> if (snd (Array.get nodes ar.tgt) <= snd (Array.get nodes ar.src) + snd ar.lbl)
+            then (nodes, queue_temp)
+            else (Array.set nodes ar.tgt (ar.src, snd (Array.get nodes ar.src) + snd ar.lbl);
+              if (List.mem ar.tgt queue_temp) then (nodes, queue_temp) else (nodes, (List.rev (ar.tgt::(List.rev queue_temp))))) 
+          ) (acu, r) (out_arcs gr x)
+      in loop gr src acu_new queue 
+
+  in
+
+  let list_init = Array.make (n_fold gr (fun x nid -> if x>nid then x else nid) min_int) (src, max_int) in
+
+  Array.set list_init src (src, 0);
+  loop gr src list_init [src]
+
 (* Main algorithm. *)
 let max_flow gr src tgt = 
   

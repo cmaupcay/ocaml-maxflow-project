@@ -38,7 +38,7 @@ let test_bellman_ford filename =
   export ("./graphs/" ^ filename ^ "_min_cost_path.gv.txt") (gmap graph_short_path (fst)) ;
   print_endline ("Exported " ^ filename ^ ".txt to Graphviz format after finding minimum cost  path.") ;
   (* Transform graph to SVG. *)
-  let ret = Sys.command ("dot -Tsvg ./graphs/" ^ filename ^ "_min_cost_path.gv.txt > ./graphs/" ^ filename ^ "_shortest_path.svg") in
+  let ret = Sys.command ("dot -Tsvg ./graphs/" ^ filename ^ "_min_cost_path.gv.txt > ./graphs/" ^ filename ^ "_min_cost_path.svg") in
   Printf.printf ("Exported min cost path graph to SVG (%d).\n") ret;
   ()
 

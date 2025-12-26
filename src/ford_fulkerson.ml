@@ -63,7 +63,9 @@ let bellman_ford gr src tgt =
     if (tgt=src || snd (Array.get node_array tgt) = max_int) then acu
     (* Otherwise loop on the target's predecessor *)
     else let src_cur = fst (Array.get node_array tgt) in 
-      path_from_array gr node_array ((find_arc gr src_cur tgt)::acu) src_cur
+      match find_arc gr src_cur tgt with
+        |None->[]
+        |Some ar -> path_from_array gr node_array (ar::acu) src_cur
   in
 
   (*Check that the source and target node exist in the graph*)

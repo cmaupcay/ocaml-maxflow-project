@@ -19,7 +19,7 @@ let test_find_path filename =
 let test_max_flow filename = 
   (* Read graph file. *)
   let graph = from_file ("graphs/" ^ filename ^ ".txt") in 
-  (* Find shortest path and make new graph*)
+  (* Find max flow and make new flow graph*)
   let graph_flow = max_flow (gmap graph int_of_string) 0 (n_fold graph (fun x nid -> if x>nid then x else nid) 0) in
   (* Export graph to Graphvision format. *)
   export ("./graphs/" ^ filename ^ "_flow.gv.txt") (gmap graph_flow string_of_int) ;
@@ -30,12 +30,12 @@ let test_max_flow filename =
   ()
 
 let test_bellman_ford filename = 
-  (* Read graph file. *)
-  let graph = from_file ("graphs/" ^ filename ^ ".txt") in 
-  (* Find shortest path and make new graph*)
+  (* Read graph from file and add costs. *)
+  let graph = gmap (from_file ("graphs/" ^ filename ^ ".txt")) (fun str -> (str, int_of_string str)) in 
+  (* Find minimum cost path and make new graph*)
   let graph_short_path = List.fold_left (new_arc) (clone_nodes graph) (bellman_ford graph 0 (n_fold graph (fun x nid -> if x>nid then x else nid) 0)) in
   (* Export graph to Graphvision format. *)
-  export ("./graphs/" ^ filename ^ "_min_cost_path.gv.txt") graph_short_path ;
+  export ("./graphs/" ^ filename ^ "_min_cost_path.gv.txt") (gmap graph_short_path (fst)) ;
   print_endline ("Exported " ^ filename ^ ".txt to Graphviz format after finding minimum cost  path.") ;
   (* Transform graph to SVG. *)
   let ret = Sys.command ("dot -Tsvg ./graphs/" ^ filename ^ "_min_cost_path.gv.txt > ./graphs/" ^ filename ^ "_shortest_path.svg") in

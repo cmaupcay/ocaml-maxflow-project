@@ -133,7 +133,7 @@ let max_flow_min_cost gr src tgt =
         (* Then we update all the forward and backward arcs in the difference graph.
            We remove arcs that would have a label of 0 so as to not find invalid paths later. *)
         loop (List.fold_left (
-          fun cur_gr ar -> add_or_remove_arc (add_or_remove_arc cur_gr ar.src ar.tgt (-min_cap)) ar.tgt ar.src min_cap) 
+          fun cur_gr ar -> add_or_remove_arc_param (add_or_remove_arc_param cur_gr ar.src ar.tgt (fun (f1,c1) (f2, _) -> (f1 + f2, c1)) (-min_cap, 0-(snd ar.lbl)) (fun (x,_) -> x=0)) ar.tgt ar.src (fun (f1,c1) (f2, _) -> (f1 + f2, c1)) (min_cap, snd ar.lbl) (fun (x,_) -> x=0)) 
         gr l) src tgt
   in 
 

@@ -17,9 +17,12 @@ let remove_arc gr id1 id2 = e_fold gr (
     |a -> new_arc g a
   ) (clone_nodes gr)
 
-let add_or_remove_arc gr id1 id2 n =
+
+let add_or_remove_arc_param gr id1 id2 add_op added_val is_nul_val =
   match find_arc gr id1 id2 with
-  |None when n=0 -> gr
-  |None -> new_arc gr {src=id1 ; tgt=id2 ; lbl = n}
-  |Some ar when (n+ar.lbl = 0) -> remove_arc gr id1 id2
-  |Some ar -> new_arc gr {src=id1 ; tgt=id2 ; lbl = n+ar.lbl}
+  |None when is_nul_val added_val -> gr
+  |None -> new_arc gr {src=id1 ; tgt=id2 ; lbl = added_val}
+  |Some ar when (is_nul_val (add_op added_val ar.lbl)) -> remove_arc gr id1 id2
+  |Some ar -> new_arc gr {src=id1 ; tgt=id2 ; lbl = add_op added_val ar.lbl}
+
+let add_or_remove_arc gr id1 id2 n = add_or_remove_arc_param gr id1 id2 (+) n (fun x -> x=0)

@@ -113,3 +113,39 @@ let max_flow gr src tgt =
       (* If an arc has some flow but is not saturated or had an opposite arc in the capacity graph *)
       |Some ar_ec -> new_arc g {src=a.src ; tgt=a.tgt ; lbl=(a.lbl - ar_ec.lbl)}
   ) (clone_nodes gr)
+
+
+(* Main algorithm for  maximum flow search. 
+   Produces a flow graph with maximum flow and minimal cost from node src to node tgt. *)
+let max_flow_min_cost gr src tgt = 
+  
+  (* This main loop produces a difference graph ("graphe d'écart") based on the initial capacity graph *)
+  let rec loop gr src tgt = 
+    (* We try to find a minimum cost path from src to tgt in the difference graph *)
+    match bellman_ford gr src tgt with
+      (* If there are no paths left, we have achieved maximum flow *)
+      |[]-> gr
+      (* If we found a path, we update the difference graph *)
+      (* First we find the minimum amount of flow we can add that saturates an arc *)
+      |l-> let min_cap = List.fold_left (
+        fun cur_min ar -> if cur_min > fst ar.lbl then fst ar.lbl else cur_min)
+        max_int l in 
+        (* Then we update all the forward and backward arcs in the difference graph.
+           We remove arcs that would have a label of 0 so as to not find invalid paths later. *)
+        loop (List.fold_left (
+          fun cur_gr ar -> add_or_remove_arc (add_or_remove_arc cur_gr ar.src ar.tgt (-min_cap)) ar.tgt ar.src min_cap) 
+        gr l) src tgt
+  in 
+
+  let gr_ecart = loop gr src tgt in 
+
+  (* Now we convert the difference graph to a flow graph by comparing it with the capacity graph *)
+  e_fold gr (
+    fun g a -> match find_arc gr_ecart a.src a.tgt with
+      (* If an arc was saturated *)
+      |None -> new_arc g {src=a.src ; tgt=a.tgt ; lbl=a.lbl}
+      (* This means an opposite arc between the same nodes should be there *)
+      |Some ar_ec when fst ar_ec.lbl >= fst a.lbl -> g
+      (* If an arc has some flow but is not saturated or had an opposite arc in the capacity graph *)
+      |Some ar_ec -> new_arc g {src=a.src ; tgt=a.tgt ; lbl=((fst a.lbl) - (fst ar_ec.lbl), snd a.lbl)}
+  ) (clone_nodes gr)

@@ -18,3 +18,6 @@ val add_or_remove_arc_param: 'a graph -> id -> id -> ('a -> 'a -> 'a) -> 'a -> (
 (* Adds n to the value of the arc between id1 and id2. If the arc does not exist, it is created.
    If the resulting arc would have a label of 0, it is instead removed. *)
 val add_or_remove_arc: int graph -> id -> id -> int -> int graph
+
+(* Randomizes the order of values in a list *)
+val shuffle: 'a list -> 'a list

@@ -26,3 +26,15 @@ let add_or_remove_arc_param gr id1 id2 add_op added_val is_nul_val =
   |Some ar -> new_arc gr {src=id1 ; tgt=id2 ; lbl = add_op added_val ar.lbl}
 
 let add_or_remove_arc gr id1 id2 n = add_or_remove_arc_param gr id1 id2 (+) n (fun x -> x=0)
+
+let shuffle l =
+  let rec get_nth acu l = function 
+    |0 -> (List.hd l, List.rev_append acu (List.tl l))
+    |n -> get_nth ((List.hd l)::acu) (List.tl l) (n-10)
+
+  let rec loop n acu = function 
+   |[] -> acu
+   |ltemp -> let (x,r) = get_nth [] ltemp (Random.int (List.length ltemp)) 
+    in loop (n-1) (x::acu) r
+   
+in loop (List.length l) [] l

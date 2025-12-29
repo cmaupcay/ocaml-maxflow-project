@@ -23,3 +23,14 @@ let () =
   test_export "graph8" ;
   test_export "graph9" ;
   test_export "graph10" ;
+
+  test_export "graph1_cost" ;
+  test_export "graph2_cost" ;
+  test_export "graph3_cost" ;
+  test_export "graph4_cost" ;
+  test_export "graph5_cost" ;
+  test_export "graph6_cost" ;
+  test_export "graph7_cost" ;
+  test_export "graph8_cost" ;
+  test_export "graph9_cost" ;
+  test_export "graph10_cost" ;

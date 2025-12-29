@@ -42,6 +42,21 @@ let test_bellman_ford filename =
   Printf.printf ("Exported min cost path graph to SVG (%d).\n") ret;
   ()
 
+let test_max_flow_min_cost filename = 
+  (* Read graph file. *)
+  let graph = from_file ("graphs/" ^ filename ^ ".txt") in 
+  (* Find max flow with min cost and make new flow graph*)
+  let graph_flow = max_flow_min_cost (gmap graph (fun s -> try Scanf.sscanf s "%d %d" (fun flw cst -> (flw, cst))
+  with _ -> Printf.printf("Could not read cost and flow from arc in file")))
+    0 (n_fold graph (fun x nid -> if x>nid then x else nid) 0) in
+  (* Export graph to Graphvision format. *)
+  export ("./graphs/" ^ filename ^ "_flow_cost.gv.txt") (gmap graph_flow (fun (flw, cst) -> String.concat ", " [string_of_int flw, string_of_int cst])) ;
+  print_endline ("Exported " ^ filename ^ ".txt to Graphviz format after finding max flow graph.") ;
+  (* Transform graph to SVG. *)
+  let ret = Sys.command ("dot -Tsvg ./graphs/" ^ filename ^ "_flow_cost.gv.txt > ./graphs/" ^ filename ^ "_flow_cost.svg") in
+  Printf.printf ("Exported flow and cost graph to SVG (%d).\n") ret;
+  ()
+
 
 let () = 
   assert (find_path empty_graph 0 1 = []);
@@ -93,3 +108,14 @@ let () =
   test_bellman_ford "graph8" ;
   test_bellman_ford "graph9" ;
   test_bellman_ford "graph10" ;
+
+  test_max_flow_min_cost "graph1_cost" ;
+  test_max_flow_min_cost "graph2_cost" ;
+  test_max_flow_min_cost "graph3_cost" ;
+  test_max_flow_min_cost "graph4_cost" ;
+  test_max_flow_min_cost "graph5_cost" ;
+  test_max_flow_min_cost "graph6_cost" ;
+  test_max_flow_min_cost "graph7_cost" ;
+  test_max_flow_min_cost "graph8_cost" ;
+  test_max_flow_min_cost "graph9_cost" ;
+  test_max_flow_min_cost "graph10_cost" ;

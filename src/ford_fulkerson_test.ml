@@ -43,6 +43,7 @@ let test_bellman_ford filename =
   ()
 
 let test_max_flow_min_cost filename = 
+  Random.self_init ();
   (* Read graph file. *)
   let graph = from_file ("graphs/" ^ filename ^ ".txt") in 
   (* Find max flow with min cost and make new flow graph*)

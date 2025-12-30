@@ -30,7 +30,7 @@ let add_or_remove_arc gr id1 id2 n = add_or_remove_arc_param gr id1 id2 (+) n (f
 let shuffle l =
   let rec get_nth acu l = function 
     |0 -> (List.hd l, List.rev_append acu (List.tl l))
-    |n -> get_nth ((List.hd l)::acu) (List.tl l) (n-10)
+    |n -> get_nth ((List.hd l)::acu) (List.tl l) (n-1)
   in
 
   let rec loop n acu = function 
@@ -38,4 +38,5 @@ let shuffle l =
    |ltemp -> let (x,r) = get_nth [] ltemp (Random.int n) 
     in loop (n-1) (x::acu) r
    
-in loop (List.length l) [] l
+  in
+  loop (List.length l) [] l

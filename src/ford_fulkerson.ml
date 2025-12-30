@@ -1,4 +1,5 @@
 open Graph
+open Gfile
 open Tools
 
 (*Breadth-first path search between nodes src and tgt in graph gr*)
@@ -51,7 +52,7 @@ let bellman_ford gr src tgt =
             else (Array.set nodes ar.tgt (ar.src, snd (Array.get nodes ar.src) + snd ar.lbl);
               (* If an updated node isn't in the queue, add it *)
               if (List.mem ar.tgt queue_temp) then (nodes, queue_temp) else (nodes, (List.rev (ar.tgt::(List.rev queue_temp))))) 
-          ) (acu, r) (out_arcs gr x)
+          ) (acu, r) (shuffle (out_arcs gr x))
       in loop gr src acu_new queue 
 
   in
@@ -117,7 +118,13 @@ let max_flow gr src tgt =
 
 (* Main algorithm for  maximum flow search. 
    Produces a flow graph with maximum flow and minimal cost from node src to node tgt. *)
-let max_flow_min_cost gr src tgt = 
+let max_flow_min_cost gr_base src tgt = 
+
+  let add_or_remove_arc_pair gr src tgt pair =
+    add_or_remove_arc_param gr src tgt (
+    fun (f1,c1) (f2, _c2) -> (f1+f2,c1)
+    ) pair (fun (x,_) -> x=0) 
+  in
   
   (* This main loop produces a difference graph ("graphe d'écart") based on the initial capacity graph *)
   let rec loop gr src tgt = 
@@ -127,20 +134,24 @@ let max_flow_min_cost gr src tgt =
       |[]-> gr
       (* If we found a path, we update the difference graph *)
       (* First we find the minimum amount of flow we can add that saturates an arc *)
-      |l-> let min_cap = List.fold_left (
+      |l-> export ("./graphs/test_flow_cost.gv.txt") (gmap gr (fun (flw, cst) -> String.concat ", " [string_of_int flw; string_of_int cst])) ;
+        (* Transform graph to SVG. *)
+        let _ret =Sys.command ("dot -Tsvg ./graphs/test_flow_cost.gv.txt > ./graphs/test_flow_cost.svg") in
+        
+        let min_cap = List.fold_left (
         fun cur_min ar -> if cur_min > fst ar.lbl then fst ar.lbl else cur_min)
         max_int l in 
         (* Then we update all the forward and backward arcs in the difference graph.
            We remove arcs that would have a label of 0 so as to not find invalid paths later. *)
         loop (List.fold_left (
-          fun cur_gr ar -> add_or_remove_arc_param (add_or_remove_arc_param cur_gr ar.src ar.tgt (fun (f1,c1) (f2, _) -> (f1 + f2, c1)) (-min_cap, 0-(snd ar.lbl)) (fun (x,_) -> x=0)) ar.tgt ar.src (fun (f1,c1) (f2, _) -> (f1 + f2, c1)) (min_cap, snd ar.lbl) (fun (x,_) -> x=0)) 
+          fun cur_gr ar -> add_or_remove_arc_pair (add_or_remove_arc_pair cur_gr ar.src ar.tgt (-min_cap, snd ar.lbl)) ar.tgt ar.src (min_cap, 0-(snd ar.lbl))) 
         gr l) src tgt
   in 
 
-  let gr_ecart = loop gr src tgt in 
+  let gr_ecart = loop gr_base src tgt in 
 
   (* Now we convert the difference graph to a flow graph by comparing it with the capacity graph *)
-  e_fold gr (
+  e_fold gr_base (
     fun g a -> match find_arc gr_ecart a.src a.tgt with
       (* If an arc was saturated *)
       |None -> new_arc g {src=a.src ; tgt=a.tgt ; lbl=a.lbl}
@@ -148,4 +159,4 @@ let max_flow_min_cost gr src tgt =
       |Some ar_ec when fst ar_ec.lbl >= fst a.lbl -> g
       (* If an arc has some flow but is not saturated or had an opposite arc in the capacity graph *)
       |Some ar_ec -> new_arc g {src=a.src ; tgt=a.tgt ; lbl=((fst a.lbl) - (fst ar_ec.lbl), snd a.lbl)}
-  ) (clone_nodes gr)
+  ) (clone_nodes gr_base)

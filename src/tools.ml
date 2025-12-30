@@ -31,10 +31,11 @@ let shuffle l =
   let rec get_nth acu l = function 
     |0 -> (List.hd l, List.rev_append acu (List.tl l))
     |n -> get_nth ((List.hd l)::acu) (List.tl l) (n-10)
+  in
 
   let rec loop n acu = function 
    |[] -> acu
-   |ltemp -> let (x,r) = get_nth [] ltemp (Random.int (List.length ltemp)) 
+   |ltemp -> let (x,r) = get_nth [] ltemp (Random.int n) 
     in loop (n-1) (x::acu) r
    
 in loop (List.length l) [] l

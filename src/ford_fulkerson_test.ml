@@ -47,10 +47,10 @@ let test_max_flow_min_cost filename =
   let graph = from_file ("graphs/" ^ filename ^ ".txt") in 
   (* Find max flow with min cost and make new flow graph*)
   let graph_flow = max_flow_min_cost (gmap graph (fun s -> try Scanf.sscanf s "%d %d" (fun flw cst -> (flw, cst))
-  with _ -> Printf.printf("Could not read cost and flow from arc in file")))
+  with _ -> Printf.printf "Could not read cost and flow from arc in file"; failwith "cots_test"))
     0 (n_fold graph (fun x nid -> if x>nid then x else nid) 0) in
   (* Export graph to Graphvision format. *)
-  export ("./graphs/" ^ filename ^ "_flow_cost.gv.txt") (gmap graph_flow (fun (flw, cst) -> String.concat ", " [string_of_int flw, string_of_int cst])) ;
+  export ("./graphs/" ^ filename ^ "_flow_cost.gv.txt") (gmap graph_flow (fun (flw, cst) -> String.concat ", " [string_of_int flw; string_of_int cst])) ;
   print_endline ("Exported " ^ filename ^ ".txt to Graphviz format after finding max flow graph.") ;
   (* Transform graph to SVG. *)
   let ret = Sys.command ("dot -Tsvg ./graphs/" ^ filename ^ "_flow_cost.gv.txt > ./graphs/" ^ filename ^ "_flow_cost.svg") in

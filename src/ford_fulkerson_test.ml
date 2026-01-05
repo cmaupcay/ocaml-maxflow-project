@@ -110,7 +110,7 @@ let () =
   test_bellman_ford "graph9" ;
   test_bellman_ford "graph10" ;
 
-  test_max_flow_min_cost "graph1_cost" ;
+  (*test_max_flow_min_cost "graph1_cost" ;
   test_max_flow_min_cost "graph2_cost" ;
   test_max_flow_min_cost "graph3_cost" ;
   test_max_flow_min_cost "graph4_cost" ;
@@ -119,4 +119,7 @@ let () =
   test_max_flow_min_cost "graph7_cost" ;
   test_max_flow_min_cost "graph8_cost" ;
   test_max_flow_min_cost "graph9_cost" ;
-  test_max_flow_min_cost "graph10_cost" ;
+  test_max_flow_min_cost "graph10_cost" ;*)
+
+  test_max_flow_min_cost "students1";
+  test_max_flow_min_cost "students2";

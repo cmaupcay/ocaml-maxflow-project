@@ -44,16 +44,16 @@ let bellman_ford gr src tgt =
     |[]->acu
 
     (* Look through node x's outward arcs *)
-    |x::r -> let (acu_new,queue) = List.fold_left (
+    |x::r -> let queue = List.fold_left (
           (* If it's cheaper to reach an arc's destination via x than the current stored path,
              update that destination's entry in the array *)
-          fun (nodes, queue_temp) ar -> if (snd (Array.get nodes ar.tgt) <= snd (Array.get nodes ar.src) + snd ar.lbl)
-            then (nodes, queue_temp)
-            else (Array.set nodes ar.tgt (ar.src, snd (Array.get nodes ar.src) + snd ar.lbl);
+          fun queue_temp ar -> if (snd (Array.get acu ar.tgt) <= snd (Array.get acu ar.src) + snd ar.lbl)
+            then queue_temp
+            else (Array.set acu ar.tgt (ar.src, snd (Array.get acu ar.src) + snd ar.lbl);
               (* If an updated node isn't in the queue, add it *)
-              if (List.mem ar.tgt queue_temp) then (nodes, queue_temp) else (nodes, (List.rev (ar.tgt::(List.rev queue_temp))))) 
-          ) (acu, r) (shuffle (out_arcs gr x))
-      in loop gr src acu_new queue 
+              if (List.mem ar.tgt queue_temp) then queue_temp else (List.rev (ar.tgt::(List.rev queue_temp))))
+          ) r (shuffle (out_arcs gr x))
+      in loop gr src acu queue 
 
   in
 

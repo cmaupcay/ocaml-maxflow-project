@@ -34,3 +34,6 @@ let () =
   test_export "graph8_cost" ;
   test_export "graph9_cost" ;
   test_export "graph10_cost" ;
+
+  test_export "students1" ;
+  test_export "students2" ;

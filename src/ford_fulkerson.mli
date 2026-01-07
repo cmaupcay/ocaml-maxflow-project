@@ -11,3 +11,6 @@ val max_flow: int graph -> id -> id -> int graph
 
 (* Calculate max flow graph with min cost between two nodes for an input graph. *)
 val max_flow_min_cost: (int*int) graph -> id -> id -> (int*int) graph
+
+(* Calculate the total flow and cost in a flow graph (indicating the source) created with max_flow_min_cost *)
+val get_flow_and_cost: (int*int) graph -> id -> int*int

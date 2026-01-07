@@ -8,6 +8,9 @@ type path = string
 (* Values are read as strings. *)
 val from_file: path -> string graph
 
+(* Creates a  flow + cost path from a formatted students/university file (see students_format1.txt for an example). *)
+val from_file_students: path -> (int*int) graph
+
 (* Similarly, we write only a string graph.
  * If necessary, use gmap (to be written by you) to prepare the input graph. *)
 val write_file: path -> string graph -> unit

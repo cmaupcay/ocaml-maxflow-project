@@ -160,3 +160,10 @@ let max_flow_min_cost gr_base src tgt =
       (* If an arc has some flow but is not saturated or had an opposite arc in the capacity graph *)
       |Some ar_ec -> new_arc g {src=a.src ; tgt=a.tgt ; lbl=((fst a.lbl) - (fst ar_ec.lbl), snd a.lbl)}
   ) (clone_nodes gr_base)
+
+  (* Get the flow and cost going through gr with source src *)
+  let get_flow_and_cost gr src =
+    (* Sum up the flow going from src *)
+    (List.fold_left (fun acu ar -> acu + (fst ar.lbl)) 0 (out_arcs gr src),
+    (* Sum up the cost of every arc *)
+    e_fold gr (fun acu ar -> acu + (snd ar.lbl * fst ar.lbl)) 0)

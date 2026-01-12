@@ -1,14 +1,21 @@
-Base project for Ocaml project on Ford-Fulkerson. This project contains some simple configuration files to facilitate editing Ocaml in VSCode.
+Complete Ocaml graph project for functional programming course.
 
-To use, you should install the *OCaml Platform* extension in VSCode.
-Then open VSCode in the root directory of this repository (command line: `code path/to/ocaml-maxflow-project`).
+Authors :
+ - Raphaël Bocquel
+ - Clément Maupuy
 
-Features :
- - full compilation as VSCode build task (Ctrl+Shift+b)
- - highlights of compilation errors as you type
- - code completion
- - view of variable types
+This project implements both the classic Ford-Fulkerson algorithm to find the maximum flow graph from a capacity graph, 
+and a version that uses the Bellman-Ford pathfinding algorithm to find the minimum cost, maximum flow graph from a capacity and cost graph.
+The latter uses randomness to ensure non-determinism.
 
+It also implements a simple, custom input file format that lists university and students. This format lisst universities and the number of students they can accomodate,
+as well as students and their universities of choice (see graph/student_format/students_format1.txt for an exemple).
+
+The minimum cost maximum flow algorithm may be tested by running `make build`, then `./target/attribute_univ.exe inputpath outputpath`. 
+All directories in the input and output paths provided must exist. The input file must adhere to the custom format. 
+The output will be a Graphviz format text file and a SVG format dot file representing the resulting flow graph.
+
+All modules and function, including both main algorithms, can be tested by running `make test`.
 
 A [`Makefile`](Makefile) provides some useful commands:
 
@@ -18,6 +25,3 @@ A [`Makefile`](Makefile) provides some useful commands:
  - `make edit` to open the project in VSCode
  - `make clean` to remove build artifacts
  - `make test` to test all modules
-
-In case of trouble with the VSCode extension (e.g. the project does not build, there are strange mistakes), a common workaround is to (1) close vscode, (2) `make clean`, (3) `make build` and (4) reopen vscode (`make edit`).
-

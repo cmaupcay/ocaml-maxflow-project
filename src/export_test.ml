@@ -42,3 +42,4 @@ let () =
   test_export "students3" ;
 
   test_format_read "students_format1";
+  test_format_read "students_format2";

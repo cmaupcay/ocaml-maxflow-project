@@ -1,5 +1,11 @@
 (executables
- (names ftest tools_test export_test ford_fulkerson_test)
+ (names
+  ftest
+  tools_test
+  export_test
+  ford_fulkerson_test
+  univ_test
+  attribute_univ)
  ;; (libraries )
  ;; Disable some warnings
  ;; (flags (:standard -w -6))

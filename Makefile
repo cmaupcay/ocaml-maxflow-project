@@ -37,7 +37,12 @@ test.algo: build
 	@mkdir -p ./graphs/svg
 	@$(TARGET)/ford_fulkerson_test.exe
 
-test: test.tools test.export test.algo
+test.univ: build
+	@echo "\n   ⚡  TESTING - university attribution ⚡\n"
+	@mkdir -p ./graphs/svg
+	@$(TARGET)/univ_test.exe
+
+test: test.tools test.export test.algo test.univ
 	@echo "\n   🥁  TESTS RAN SUCCESSFULLY  🥁\n"
 
 # demo: build

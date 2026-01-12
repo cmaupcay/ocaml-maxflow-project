@@ -20,6 +20,8 @@ type path = string
 let iof = int_of_float
 let foi = float_of_int
 
+(* The id of target node in a graph parsed from special students and university format *)
+let max_node = 150
 let index_i id = iof (sqrt (foi id *. 1.1))
 
 let compute_x id = 20 + 180 * index_i id
@@ -79,18 +81,19 @@ let read_comment graph line =
     failwith "from_file"
 
 (* Reads a line with a university. *)
-let read_univ graph cur_node line =
-  try Scanf.sscanf line "University %d Max_Students %d" (fun id flow -> (new_arc (new_node graph id) {src=id ; tgt=80 ; lbl=(flow, 1)}, max cur_node (id+1)))
+let read_univ graph line =
+  try Scanf.sscanf line "University %d Max_Students %d" (fun id flow -> (new_arc (new_node graph id) {src=id ; tgt=max_node ; lbl=(flow, 1)}))
   with e ->
     Printf.printf "Cannot read university in line - %s:\n%s\n%!" (Printexc.to_string e) line ;
     failwith "from_file"
 
 (* Reads a line with a student. *)
-let read_student graph cur_node line =
-  try Scanf.sscanf line "Student %_d  Preferences %s@%%"
-        (fun lbl -> let lbl = String.trim lbl in fst (
-          List.fold_left (fun (gr, n) str -> (new_arc gr {src=cur_node ; tgt=(int_of_string str) ; lbl=(1,n)}, n+1)) 
-          (new_arc (new_node graph cur_node) {src=0 ; tgt=cur_node ; lbl=(1,0)}, 1) (String.split_on_char ' ' lbl) ))
+let read_student graph line =
+  try Scanf.sscanf line "Student %d  Preferences %s@%%"
+  (* Add an arc to each university, with cost corresponding to preference (favorite = 1, least favorite = number of universities) *)
+        (fun id lbl -> let lbl = String.trim lbl in fst (
+          List.fold_left (fun (gr, n) str -> (new_arc gr {src=id ; tgt=(int_of_string str) ; lbl=(1,n)}, n+1)) 
+          (new_arc (new_node graph id) {src=0 ; tgt=id ; lbl=(1,0)}, 1) (String.split_on_char ' ' lbl) ))
   with e ->
     Printf.printf "Cannot read arc in line - %s:\n%s\n%!" (Printexc.to_string e) line ;
     failwith "from_file"
@@ -136,31 +139,31 @@ let from_file_students path =
   let infile = open_in path in
 
   (* Read all lines until end of file. *)
-  let rec loop graph cur_node =
+  let rec loop graph=
     try
       let line = input_line infile in
 
       (* Remove leading and trailing spaces. *)
       let line = String.trim line in
 
-      let (graph2, new_node) =
+      let graph2 =
         (* Ignore empty lines *)
-        if line = "" then (graph,cur_node)
+        if line = "" then graph
 
         (* The first character of a line determines its content : n or e. *)
         else match line.[0] with
-          | 'U' -> read_univ graph cur_node line
-          | 'S' -> (read_student graph cur_node line, cur_node + 1)
+          | 'U' -> read_univ graph line
+          | 'S' -> read_student graph line
 
           (* It should be a comment, otherwise we complain. *)
-          | _ -> (read_comment graph line, cur_node)
+          | _ -> read_comment graph line
       in      
-      loop graph2 new_node
+      loop graph2
 
     with End_of_file -> graph (* Done *)
   in
 
-  let final_graph = loop (new_node (new_node empty_graph 0) 80) 1 in
+  let final_graph = loop (new_node (new_node empty_graph 0) max_node) in
   
   close_in infile ;
   final_graph

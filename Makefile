@@ -24,14 +24,17 @@ edit:
 
 test.tools: build
 	@echo "\n   ⚡  TESTING - tools  ⚡\n"
+	@mkdir -p ./graphs/outfiles
 	@$(TARGET)/tools_test.exe
 	
 test.export: build
 	@echo "\n   ⚡  TESTING - export  ⚡\n"
+	@mkdir -p ./graphs/svg
 	@$(TARGET)/export_test.exe
 	
 test.algo: build
 	@echo "\n   ⚡  TESTING - algo  ⚡\n"
+	@mkdir -p ./graphs/svg
 	@$(TARGET)/ford_fulkerson_test.exe
 
 test: test.tools test.export test.algo

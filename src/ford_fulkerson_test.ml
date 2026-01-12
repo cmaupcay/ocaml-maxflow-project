@@ -5,70 +5,70 @@ open Tools
 
 let test_find_path filename = 
   (* Read graph file. *)
-  let graph = from_file ("graphs/" ^ filename ^ ".txt") in 
+  let graph = from_file ("graphs/base/" ^ filename ^ ".txt") in 
   (* Find shortest path and make new graph*)
   let graph_short_path = List.fold_left (new_arc) (clone_nodes graph) (find_path graph 0 (n_fold graph (fun x nid -> if x>nid then x else nid) 0)) in
   (* Export graph to Graphvision format. *)
-  export ("./graphs/" ^ filename ^ "_shortest_path.gv.txt") graph_short_path ;
+  export ("./graphs/svg/" ^ filename ^ "_shortest_path.gv.txt") graph_short_path ;
   print_endline ("Exported " ^ filename ^ ".txt to Graphviz format after finding shortest path.") ;
   (* Transform graph to SVG. *)
-  let ret = Sys.command ("dot -Tsvg ./graphs/" ^ filename ^ "_shortest_path.gv.txt > ./graphs/" ^ filename ^ "_shortest_path.svg") in
+  let ret = Sys.command ("dot -Tsvg ./graphs/svg/" ^ filename ^ "_shortest_path.gv.txt > ./graphs/svg/" ^ filename ^ "_shortest_path.svg") in
   Printf.printf ("Exported shortest path graph to SVG (%d).\n") ret;
   ()
 
 let test_max_flow filename = 
   (* Read graph file. *)
-  let graph = from_file ("graphs/" ^ filename ^ ".txt") in 
+  let graph = from_file ("graphs/base/" ^ filename ^ ".txt") in 
   (* Find max flow and make new flow graph*)
   let graph_flow = max_flow (gmap graph int_of_string) 0 (n_fold graph (fun x nid -> if x>nid then x else nid) 0) in
   (* Export graph to Graphvision format. *)
-  export ("./graphs/" ^ filename ^ "_flow.gv.txt") (gmap graph_flow string_of_int) ;
+  export ("./graphs/svg/" ^ filename ^ "_flow.gv.txt") (gmap graph_flow string_of_int) ;
   print_endline ("Exported " ^ filename ^ ".txt to Graphviz format after finding max flow graph.") ;
   (* Transform graph to SVG. *)
-  let ret = Sys.command ("dot -Tsvg ./graphs/" ^ filename ^ "_flow.gv.txt > ./graphs/" ^ filename ^ "_flow.svg") in
+  let ret = Sys.command ("dot -Tsvg ./graphs/svg/" ^ filename ^ "_flow.gv.txt > ./graphs/svg/" ^ filename ^ "_flow.svg") in
   Printf.printf ("Exported flow graph to SVG (%d).\n") ret;
   ()
 
 let test_bellman_ford filename = 
   (* Read graph from file and add costs. *)
-  let graph = gmap (from_file ("graphs/" ^ filename ^ ".txt")) (fun str -> (str, int_of_string str)) in 
+  let graph = gmap (from_file ("graphs/base/" ^ filename ^ ".txt")) (fun str -> (str, int_of_string str)) in 
   (* Find minimum cost path and make new graph*)
   let graph_short_path = List.fold_left (new_arc) (clone_nodes graph) (bellman_ford graph 0 (n_fold graph (fun x nid -> if x>nid then x else nid) 0)) in
   (* Export graph to Graphvision format. *)
-  export ("./graphs/" ^ filename ^ "_min_cost_path.gv.txt") (gmap graph_short_path (fst)) ;
+  export ("./graphs/svg/" ^ filename ^ "_min_cost_path.gv.txt") (gmap graph_short_path (fst)) ;
   print_endline ("Exported " ^ filename ^ ".txt to Graphviz format after finding minimum cost  path.") ;
   (* Transform graph to SVG. *)
-  let ret = Sys.command ("dot -Tsvg ./graphs/" ^ filename ^ "_min_cost_path.gv.txt > ./graphs/" ^ filename ^ "_min_cost_path.svg") in
+  let ret = Sys.command ("dot -Tsvg ./graphs/svg/" ^ filename ^ "_min_cost_path.gv.txt > ./graphs/svg/" ^ filename ^ "_min_cost_path.svg") in
   Printf.printf ("Exported min cost path graph to SVG (%d).\n") ret;
   ()
 
 let test_max_flow_min_cost filename = 
   Random.self_init ();
   (* Read graph file. *)
-  let graph = from_file ("graphs/" ^ filename ^ ".txt") in 
+  let graph = from_file ("graphs/base/" ^ filename ^ ".txt") in 
   (* Find max flow with min cost and make new flow graph*)
   let graph_flow = max_flow_min_cost (gmap graph (fun s -> try Scanf.sscanf s "%d %d" (fun flw cst -> (flw, cst))
   with _ -> Printf.printf "Could not read cost and flow from arc in file"; failwith "cots_test"))
     0 (n_fold graph (fun x nid -> if x>nid then x else nid) 0) in
   (* Export graph to Graphvision format. *)
-  export ("./graphs/" ^ filename ^ "_flow_cost.gv.txt") (gmap graph_flow (fun (flw, cst) -> String.concat ", " [string_of_int flw; string_of_int cst])) ;
-  print_endline ("Exported " ^ filename ^ ".txt to Graphviz format after finding max flow graph.") ;
+  export ("./graphs/svg/" ^ filename ^ "_flow_cost.gv.txt") (gmap graph_flow (fun (flw, cst) -> String.concat ", " [string_of_int flw; string_of_int cst])) ;
+  print_endline ("Exported " ^ filename ^ ".txt to Graphviz format after finding max flow min cost graph.") ;
   (* Transform graph to SVG. *)
-  let ret = Sys.command ("dot -Tsvg ./graphs/" ^ filename ^ "_flow_cost.gv.txt > ./graphs/" ^ filename ^ "_flow_cost.svg") in
+  let ret = Sys.command ("dot -Tsvg ./graphs/svg/" ^ filename ^ "_flow_cost.gv.txt > ./graphs/svg/" ^ filename ^ "_flow_cost.svg") in
   Printf.printf ("Exported flow and cost graph to SVG (%d).\n") ret;
   ()
 
   let test_univ_attribution filename = 
   Random.self_init ();
   (* Read formatted graph file. *)
-  let graph = from_file_students ("graphs/" ^ filename ^ ".txt") in 
+  let graph = from_file_students ("graphs/student_format/" ^ filename ^ ".txt") in 
   (* Find max flow with min cost and make new flow graph*)
   let graph_flow = max_flow_min_cost graph 0 (n_fold graph (fun x nid -> if x>nid then x else nid) 0) in
   (* Export graph to Graphvision format. *)
-  export ("./graphs/" ^ filename ^ "_flow_cost.gv.txt") (gmap graph_flow (fun (flw, cst) -> String.concat ", " [string_of_int flw; string_of_int cst])) ;
-  print_endline ("Exported " ^ filename ^ ".txt to Graphviz format after finding max flow graph.") ;
+  export ("./graphs/svg/" ^ filename ^ "_flow_cost.gv.txt") (gmap graph_flow (fun (flw, cst) -> String.concat ", " [string_of_int flw; string_of_int cst])) ;
+  print_endline ("Exported " ^ filename ^ ".txt to Graphviz format after finding max flow min cost graph.") ;
   (* Transform graph to SVG. *)
-  let ret = Sys.command ("dot -Tsvg ./graphs/" ^ filename ^ "_flow_cost.gv.txt > ./graphs/" ^ filename ^ "_flow_cost.svg") in
+  let ret = Sys.command ("dot -Tsvg ./graphs/svg/" ^ filename ^ "_flow_cost.gv.txt > ./graphs/svg/" ^ filename ^ "_flow_cost.svg") in
   Printf.printf ("Exported flow and cost graph to SVG (%d).\n") ret;
   let (flow, cost) = get_flow_and_cost graph_flow 0 in
   Printf.printf ("%d students were mapped to universities with total cost %d.\n") flow cost;
@@ -106,7 +106,6 @@ let () =
   test_max_flow "graph8" ;
   test_max_flow "graph9" ;
   test_max_flow "graph10" ;
-  test_max_flow "graph_cycle" ;
 
   assert (bellman_ford empty_graph 0 1 = []);
   let graph01 = new_node (new_node (new_node empty_graph 0) 1) 2 in
@@ -124,17 +123,6 @@ let () =
   test_bellman_ford "graph8" ;
   test_bellman_ford "graph9" ;
   test_bellman_ford "graph10" ;
-
-  (*test_max_flow_min_cost "graph1_cost" ;
-  test_max_flow_min_cost "graph2_cost" ;
-  test_max_flow_min_cost "graph3_cost" ;
-  test_max_flow_min_cost "graph4_cost" ;
-  test_max_flow_min_cost "graph5_cost" ;
-  test_max_flow_min_cost "graph6_cost" ;
-  test_max_flow_min_cost "graph7_cost" ;
-  test_max_flow_min_cost "graph8_cost" ;
-  test_max_flow_min_cost "graph9_cost" ;
-  test_max_flow_min_cost "graph10_cost" ;*)
 
   test_max_flow_min_cost "students1";
   test_max_flow_min_cost "students2";

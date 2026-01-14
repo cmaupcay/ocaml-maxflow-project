@@ -82,7 +82,7 @@ let read_comment graph line =
 
 (* Reads a line with a university. *)
 let read_univ graph line =
-  try Scanf.sscanf line "University %d Max_Students %d" (fun id flow -> (new_arc (new_node graph id) {src=id ; tgt=max_node ; lbl=(flow, 1)}))
+  try Scanf.sscanf line "University %d Max_Students %d" (fun id flow -> (new_arc (new_node graph id) {src=id ; tgt=max_node ; lbl=(flow, 0)}))
   with e ->
     Printf.printf "Cannot read university in line - %s:\n%s\n%!" (Printexc.to_string e) line ;
     failwith "from_file"

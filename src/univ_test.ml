@@ -67,6 +67,8 @@ let () =
   test_bellman_ford "graph9" ;
   test_bellman_ford "graph10" ;
 
+  assert (max_flow_min_cost empty_graph 0 1 = empty_graph);
+
   test_max_flow_min_cost "students1";
   test_max_flow_min_cost "students2";
   test_max_flow_min_cost "students3";
@@ -76,3 +78,5 @@ let () =
 
   test_univ_attribution "students_format1";
   test_univ_attribution "students_format2";
+  test_univ_attribution "students_format3";
+  test_univ_attribution "students_format4";

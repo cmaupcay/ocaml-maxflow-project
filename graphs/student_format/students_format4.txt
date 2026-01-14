@@ -1,0 +1,21 @@
+University 1 Max_Students 2
+University 2 Max_Students 4
+University 3 Max_Students 2
+University 4 Max_Students 1
+University 5 Max_Students 2
+University 6 Max_Students 3
+
+Student 7 Preferences 2 4 5 3 1 6
+Student 8 Preferences 2 4 5 3 1 6
+Student 9 Preferences 2 4 5 3 1 6
+Student 10 Preferences 2 4 5 3 1 6
+Student 11 Preferences 2 4 5 3 1 6
+Student 12 Preferences 2 4 5 3 1 6
+Student 13 Preferences 2 4 5 3 1 6
+Student 14 Preferences 2 4 5 3 1 6
+Student 15 Preferences 2 4 5 3 1 6
+Student 16 Preferences 2 4 5 3 1 6
+Student 17 Preferences 2 4 5 3 1 6
+Student 18 Preferences 2 4 5 3 1 6
+Student 19 Preferences 2 4 5 3 1 6
+Student 20 Preferences 2 4 5 3 1 6

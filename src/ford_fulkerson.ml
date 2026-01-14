@@ -1,5 +1,4 @@
 open Graph
-open Gfile
 open Tools
 
 (*Breadth-first path search between nodes src and tgt in graph gr*)
@@ -38,7 +37,8 @@ let find_path gr src tgt =
 let bellman_ford gr src tgt = 
 
   (* Main loop updates an array with the predecessor and cost of every node.
-     Yes, dynamic programming in ocaml is probably not the best idea, but I'm not enough of a graph master to figure out an alternative. *)
+     Yes, dynamic programming in ocaml is prob
+ably not the best idea, but I'm not enough of a graph master to figure out an alternative. *)
   let rec loop gr src acu = function
     (* If the queue is empty, terminate the algorithm *)
     |[]->acu
@@ -57,7 +57,8 @@ let bellman_ford gr src tgt =
 
   in
 
-  (* This goes through the array, starting from node tgt's entry,
+  (* This goes through the array, starting fro
+m node tgt's entry,
      and recursively visits predecessors to construct a path *)
   let rec path_from_array gr node_array acu tgt = 
     (* If we have reached the source or the target could not be reached, exit the loop *)
@@ -132,12 +133,10 @@ let max_flow_min_cost gr_base src tgt =
     match bellman_ford gr src tgt with
       (* If there are no paths left, we have achieved maximum flow *)
       |[]-> gr
+
       (* If we found a path, we update the difference graph *)
       (* First we find the minimum amount of flow we can add that saturates an arc *)
-      |l-> export ("./graphs/test_flow_cost.gv.txt") (gmap gr (fun (flw, cst) -> String.concat ", " [string_of_int flw; string_of_int cst])) ;
-        (* Transform graph to SVG. *)
-        let _ret =Sys.command ("dot -Tsvg ./graphs/test_flow_cost.gv.txt > ./graphs/test_flow_cost.svg") in
-        
+      |l-> 
         let min_cap = List.fold_left (
         fun cur_min ar -> if cur_min > fst ar.lbl then fst ar.lbl else cur_min)
         max_int l in 
@@ -161,9 +160,9 @@ let max_flow_min_cost gr_base src tgt =
       |Some ar_ec -> new_arc g {src=a.src ; tgt=a.tgt ; lbl=((fst a.lbl) - (fst ar_ec.lbl), snd a.lbl)}
   ) (clone_nodes gr_base)
 
-  (* Get the flow and cost going through gr with source src *)
-  let get_flow_and_cost gr src =
-    (* Sum up the flow going from src *)
-    (List.fold_left (fun acu ar -> acu + (fst ar.lbl)) 0 (out_arcs gr src),
-    (* Sum up the cost of every arc *)
-    e_fold gr (fun acu ar -> acu + (snd ar.lbl * fst ar.lbl)) 0)
+(* Get the flow and cost going through gr with source src *)
+let get_flow_and_cost gr src =
+  (* Sum up the flow going from src *)
+  (List.fold_left (fun acu ar -> acu + (fst ar.lbl)) 0 (out_arcs gr src),
+  (* Sum up the cost of every arc *)
+  e_fold gr (fun acu ar -> acu + (snd ar.lbl * fst ar.lbl)) 0)

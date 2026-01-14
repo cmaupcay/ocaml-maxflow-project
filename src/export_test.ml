@@ -43,3 +43,5 @@ let () =
 
   test_format_read "students_format1";
   test_format_read "students_format2";
+  test_format_read "students_format3";
+  test_format_read "students_format4";
